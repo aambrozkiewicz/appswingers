@@ -1,0 +1,29 @@
+from django.db import models
+from django import forms
+
+
+class CustomAgeField(models.PositiveIntegerField):
+    def to_python(self, value):
+        return super().to_python(value)
+
+    def formfield(self, **kwargs):
+        defaults = {
+            **kwargs,
+            'form_class': forms.ChoiceField,
+        }
+        return super().formfield(**defaults)
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=255)
+    age = CustomAgeField(choices=((1, 'Raz'),))
+    email = models.EmailField()
+
+    def __str__(self):
+        return f'{self.name} {self.phone_number}'
+
+
+class Address(models.Model):
+    # TODO: implement
+    pass
