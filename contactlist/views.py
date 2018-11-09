@@ -1,5 +1,5 @@
 import random
-from rest_framework import viewsets, response, decorators, views, status
+from rest_framework import viewsets, response, decorators, views, status, generics
 
 from contactlist import models, serializers
 
@@ -37,16 +37,9 @@ class ContactsView(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ContactDetailView(views.APIView):
-    def get_queryset(self):
-        return models.Contact.objects.all()
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        lookup_kwargs = {
-            'pk': self.kwargs['pk'],
-        }
-        return queryset.filter(**lookup_kwargs).first()
+class ContactDetailView(generics.RetrieveAPIView, views.APIView):
+    serializer_class = serializers.ContactSerializer
+    queryset = models.Contact.objects.all()
 
     def patch(self, request, **kwargs):
         instance = self.get_object()
@@ -60,5 +53,10 @@ class ContactDetailView(views.APIView):
         instance.delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, *args, **kwargs):
-        raise NotImplemented
+
+class AddressView(views.APIView):
+    def post(self, request):
+        serializer = serializers.AddressSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return response.Response(serializer.data, status=status.HTTP_201_CREATED)

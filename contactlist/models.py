@@ -25,5 +25,16 @@ class Contact(models.Model):
 
 
 class Address(models.Model):
-    # TODO: implement
-    pass
+    TYPES = (
+        ('home', 'Home'),
+        ('work', 'Work'),
+    )
+
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='addresses')
+    address_type = models.CharField(max_length=32, choices=TYPES)
+    street = models.CharField(max_length=255)
+    post_code = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.contact.name} {self.address_type}'
