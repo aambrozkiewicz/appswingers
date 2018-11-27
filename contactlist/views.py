@@ -1,5 +1,5 @@
 import random
-from rest_framework import viewsets, response, decorators, views, status, generics
+from rest_framework import viewsets, response, decorators, views, status, generics, permissions
 
 from contactlist import models, serializers
 
@@ -24,17 +24,15 @@ class ClassBasedMagicNumber(views.APIView):
         return response.Response('post response')
 
 
-class ContactsView(views.APIView):
-    def get(self, request):
-        contacts = models.Contact.objects.all()
-        serializer = serializers.ContactSerializer(contacts, many=True)
-        return response.Response(serializer.data)
+class ContactsView(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.ContactSerializer
+    queryset = models.Contact.objects.all()
 
-    def post(self, request):
-        serializer = serializers.ContactSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            user=self.request.user,
+        )
 
 
 class ContactDetailView(generics.RetrieveAPIView, views.APIView):
@@ -54,9 +52,12 @@ class ContactDetailView(generics.RetrieveAPIView, views.APIView):
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AddressView(views.APIView):
-    def post(self, request):
-        serializer = serializers.AddressSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+class AddressView(generics.CreateAPIView, generics.ListAPIView):
+    queryset = models.Address.objects
+    serializer_class = serializers.AddressSerializer
+
+    # def post(self, request):
+    #     serializer = serializers.AddressSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return response.Response(serializer.data, status=status.HTTP_201_CREATED)

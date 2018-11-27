@@ -14,5 +14,5 @@ urlpatterns += [
 
     path('custom-contacts/<int:pk>', views.ContactDetailView.as_view()),
 
-    path('address', views.AddressView.as_view()),
+    path('address/', views.AddressView.as_view()),
 ]

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django import forms
 
@@ -19,6 +20,8 @@ class Contact(models.Model):
     phone_number = models.CharField(max_length=255)
     age = CustomAgeField(choices=((1, 'Raz'),))
     email = models.EmailField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='contacts',
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name} {self.phone_number}'
@@ -30,7 +33,8 @@ class Address(models.Model):
         ('work', 'Work'),
     )
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='addresses')
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE,
+                                related_name='addresses')
     address_type = models.CharField(max_length=32, choices=TYPES)
     street = models.CharField(max_length=255)
     post_code = models.CharField(max_length=255)
