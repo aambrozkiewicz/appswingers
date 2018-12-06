@@ -11,6 +11,7 @@ services:
 
   backend:
     build: .
+    image: appswingers_backend
     command: ["./wait-for-it.sh", "db:5432", "--", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - .:/code
@@ -20,6 +21,20 @@ services:
       - "db"
     restart: on-failure
     env_file: .env
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+  celery:
+    image: appswingers_backend
+    command: ./wait-for-it.sh rabbit:5672 -- sh run-celery.sh
+    volumes:
+      - .:/code
+    restart: always
+    depends_on:
+      - rabbit
 
 volumes:
   appswingers_db_data:
