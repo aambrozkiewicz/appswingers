@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'contactlist',
+    'appswingers',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '5609664cc4495a715'
+EMAIL_HOST_PASSWORD = '09d642ea6b169e'
+EMAIL_PORT = '2525'

@@ -52,12 +52,6 @@ class ContactDetailView(generics.RetrieveAPIView, views.APIView):
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AddressView(generics.CreateAPIView, generics.ListAPIView):
-    queryset = models.Address.objects
+class AddressView(generics.ListCreateAPIView):
+    queryset = models.Address.objects.all()
     serializer_class = serializers.AddressSerializer
-
-    # def post(self, request):
-    #     serializer = serializers.AddressSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return response.Response(serializer.data, status=status.HTTP_201_CREATED)
