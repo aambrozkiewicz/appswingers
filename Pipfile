@@ -10,6 +10,7 @@ django-environ = "==0.4.5"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
 celery = "*"
+requests = "*"
 
 [dev-packages]
 

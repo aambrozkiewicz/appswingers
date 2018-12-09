@@ -11,3 +11,8 @@ class ContactAdmin(admin.ModelAdmin):
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.UserGitHubRepository)
+class UserGitHubRepositoryAdmin(admin.ModelAdmin):
+    pass

@@ -42,3 +42,17 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.contact.name} {self.address_type}'
+
+
+class UserGitHubRepository(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                             related_name='repositories')
+    name = models.CharField(max_length=255)
+    html_url = models.URLField()
+    ext_id = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name_plural = 'User GitHub Repositories'
+
+    def __str__(self):
+        return self.name
